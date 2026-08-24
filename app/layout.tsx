@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CRM Dashboard",
+  title: "Advanced CRM Dashboard",
   description: "Advanced customer management dashboard",
 };
 
