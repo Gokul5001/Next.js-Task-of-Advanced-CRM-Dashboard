@@ -383,8 +383,7 @@ export function CustomerTable() {
                 ) : (
                   <TableHead className="w-8">
                     <Checkbox
-                      checked={allOnPageSelected ? true : someOnPageSelected ? "indeterminate" : false}
-                      onCheckedChange={toggleSelectAllOnPage}
+checked={allOnPageSelected || someOnPageSelected}                      onCheckedChange={toggleSelectAllOnPage}
                       aria-label="Select all on page"
                     />
                   </TableHead>

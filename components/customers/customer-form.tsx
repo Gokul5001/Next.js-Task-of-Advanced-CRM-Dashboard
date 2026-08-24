@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -48,10 +49,14 @@ export function CustomerForm({
   isSubmitting,
   submitLabel,
 }: CustomerFormProps) {
-  const form = useForm<CustomerFormValues>({
-    resolver: zodResolver(customerFormSchema),
-    defaultValues: { ...EMPTY_DEFAULTS, ...defaultValues },
-  });
+  const form = useForm<
+  z.input<typeof customerFormSchema>,
+  unknown,
+  CustomerFormValues
+>({
+  resolver: zodResolver(customerFormSchema),
+  defaultValues: { ...EMPTY_DEFAULTS, ...defaultValues },
+});
 
   // Re-sync the form whenever a different customer's defaultValues come in
   // (e.g. opening Edit for a different row while the dialog stays mounted).
