@@ -7,6 +7,11 @@ const PALETTE = [
   "bg-fuchsia-100 text-fuchsia-700",
 ];
 
+// A simple deterministic string hash (same bit-shift approach as Java's
+// String.hashCode(): hash * 31 + charCode, done via shifts instead of
+// multiplication). We don't need cryptographic strength here — just a
+// stable number per name so the same customer always gets the same
+// avatar color across renders, instead of a random one on every mount.
 function hashString(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -25,6 +30,8 @@ function getInitials(name: string): string {
 }
 
 export function CustomerAvatar({ name }: { name: string }) {
+  // Deterministic index into PALETTE via the hash, so a given customer
+  // always renders with the same background color.
   const colorClass = PALETTE[hashString(name) % PALETTE.length];
   return (
     <div

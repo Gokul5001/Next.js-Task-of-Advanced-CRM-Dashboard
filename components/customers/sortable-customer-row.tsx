@@ -23,6 +23,13 @@ export function SortableCustomerRow({
     id: customer.id,
   });
 
+  // dnd-kit gives us the drag state as raw data (transform/transition
+  // deltas + a boolean), not CSS — we're responsible for turning it into
+  // actual styles. CSS.Transform.toString() converts dnd-kit's transform
+  // object into a valid `transform` CSS value; `transition` is passed
+  // through as-is so the row animates back into place on drop; opacity
+  // dims the row being dragged so it reads as "lifted" while its
+  // placeholder stays in the list.
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,

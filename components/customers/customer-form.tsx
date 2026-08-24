@@ -49,6 +49,14 @@ export function CustomerForm({
   isSubmitting,
   submitLabel,
 }: CustomerFormProps) {
+  // Three type params instead of the usual one: customerFormSchema uses
+  // z.optional().default(...) on `company`/`notes`, so Zod's *input* type
+  // (what the form fields hold before submit, where those can be
+  // undefined) differs from its *output* type (after parsing, where the
+  // defaults have been applied and they're always strings). Passing only
+  // CustomerFormValues (the output type) as the single generic would make
+  // react-hook-form think `company`/`notes` are required from the start,
+  // which conflicts with how the resolver actually types them pre-submit.
   const form = useForm<
   z.input<typeof customerFormSchema>,
   unknown,
