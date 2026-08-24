@@ -395,10 +395,24 @@ export function CustomerTable() {
               <TableRow>
                 {manualReorderMode ? (
                   <TableHead className="w-8" />
+                ) : someOnPageSelected && !allOnPageSelected ? (
+                  // Partial selection: the installed Checkbox component's `checked`
+                  // prop only accepts boolean, not "indeterminate" — so a manually
+                  // styled button stands in to show the indeterminate state.
+                  <TableHead className="w-8">
+                    <button
+                      type="button"
+                      onClick={toggleSelectAllOnPage}
+                      aria-label="Some rows selected on this page"
+                      className="flex h-4 w-4 items-center justify-center rounded-sm border border-primary bg-primary"
+                    >
+                      <span className="h-0.5 w-2 rounded-sm bg-primary-foreground" />
+                    </button>
+                  </TableHead>
                 ) : (
                   <TableHead className="w-8">
                     <Checkbox
-                      checked={allOnPageSelected ? true : someOnPageSelected ? "indeterminate" : false}
+                      checked={allOnPageSelected}
                       onCheckedChange={toggleSelectAllOnPage}
                       aria-label="Select all on page"
                     />
@@ -569,7 +583,6 @@ export function CustomerTable() {
         onEdit={() => {
           setDetailsOpen(false);
           setEditOpen(true);
-
         }}
         onDelete={() => {
           setDetailsOpen(false);
