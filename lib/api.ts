@@ -36,6 +36,10 @@ function generateSeedCustomers(count: number): Customer[] {
       id: `seed-${i + 1}`,
       name: `${first} ${last}`,
       email: `${first.toLowerCase()}.${last.toLowerCase()}${i}@example.com`,
+      // Building "###-####" with a fixed width: adding a base offset
+      // (100 / 1000) before slicing guarantees the random digits always
+      // fill the full 3 / 4 character width, so we never end up with a
+      // short number like "555-42-7" if Math.random() rolls low.
       phone: `+1 (555) ${String(100 + Math.floor(Math.random() * 900)).slice(0, 3)}-${String(
         1000 + Math.floor(Math.random() * 9000)
       ).slice(0, 4)}`,
@@ -133,9 +137,22 @@ export async function reorderCustomers(orderedIds: string[]): Promise<Customer[]
   await delay(150);
   const customers = loadCustomers();
   const idSet = new Set(orderedIds);
+
+  // byId: lookup so we can go from an id in `orderedIds` back to the full
+  // Customer object (orderedIds only carries ids, not full records).
   const byId = new Map(customers.filter((c) => idSet.has(c.id)).map((c) => [c.id, c]));
+
+  // queue: the reordered customers, in the exact sequence the caller wants
+  // them to appear, but with no knowledge yet of *where* in the full list
+  // (which also contains untouched customers) they should land.
   const queue = orderedIds.map((id) => byId.get(id)).filter(Boolean) as Customer[];
 
+  // Walk the original full list in its original order. Every slot that
+  // belongs to a reordered customer is filled from the front of `queue`
+  // (via the shared cursor `i`), so those slots end up holding the new
+  // order — while every other slot keeps its original customer untouched.
+  // This is what lets us reorder a filtered/paginated subset without
+  // disturbing the position of everyone else in storage.
   let i = 0;
   const merged = customers.map((c) => (idSet.has(c.id) ? queue[i++] : c));
 

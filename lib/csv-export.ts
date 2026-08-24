@@ -1,5 +1,11 @@
 import { Customer } from "./types";
 
+// CSV quoting rule: a value only needs to be wrapped in quotes if it
+// contains a character that would otherwise be misread as a field/row
+// separator or as the start of a quoted field (comma, double quote, or
+// newline). When quoting is needed, any literal double quotes inside the
+// value must themselves be doubled ("" ) so the parser doesn't treat them
+// as the closing quote.
 function escapeCsvValue(value: string): string {
   if (value.includes(",") || value.includes('"') || value.includes("\n")) {
     return `"${value.replace(/"/g, '""')}"`;

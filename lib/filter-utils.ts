@@ -11,6 +11,12 @@ export function createEmptyFilters(): CustomerFilters {
   };
 }
 
+// All active filter fields are combined with AND, not OR — a customer must
+// pass every filter that currently has a value to be included. Within the
+// `status` and `companies` arrays specifically, matching ANY one of the
+// selected values counts as passing that individual filter (e.g. status
+// ["active", "inactive"] would match either), it's only across *different*
+// filter fields that the logic becomes AND.
 export function applyFilters(customers: Customer[], filters: CustomerFilters): Customer[] {
   return customers.filter((c) => {
     if (filters.status.length > 0 && !filters.status.includes(c.status)) return false;

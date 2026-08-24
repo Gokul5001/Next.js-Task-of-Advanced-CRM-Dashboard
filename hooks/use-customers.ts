@@ -87,6 +87,14 @@ export function useReorderCustomers() {
       const previous = queryClient.getQueryData<Customer[]>(customersQueryKey);
 
       if (previous) {
+        // Same merge as the mock API's reorderCustomers: build a lookup
+        // (byId) to resolve ids back to full Customer objects, lay them
+        // out in the requested order (queue), then walk the full cached
+        // list and, for every id that's part of this reorder, pull the
+        // next customer off the front of `queue` (shared cursor `i`).
+        // Ids not in this reorder just keep their original slot, so an
+        // optimistic reorder of a filtered/paginated subset never
+        // clobbers the rest of the cached list.
         const idSet = new Set(orderedIds);
         const byId = new Map(previous.filter((c) => idSet.has(c.id)).map((c) => [c.id, c]));
         const queue = orderedIds.map((id) => byId.get(id)).filter(Boolean) as Customer[];
