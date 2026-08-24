@@ -39,9 +39,9 @@ export function CustomerDetailsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <div className="flex items-center justify-between pr-6">
-            <DialogTitle>{customer.name}</DialogTitle>
-            <div className="flex gap-2">
+          <div className="flex items-start justify-between gap-3 pr-6">
+            <DialogTitle className="min-w-0 break-words">{customer.name}</DialogTitle>
+            <div className="flex gap-2 shrink-0">
               <Button variant="outline" size="sm" onClick={onEdit}>
                 Edit Customer
               </Button>
@@ -52,30 +52,30 @@ export function CustomerDetailsDialog({
           </div>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-4 text-sm">
+          <div className="min-w-0">
             <p className="text-muted-foreground text-xs mb-1">Email</p>
-            <p>{customer.email}</p>
+            <p className="break-all">{customer.email}</p>
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-muted-foreground text-xs mb-1">Phone</p>
-            <p>{customer.phone}</p>
+            <p className="break-words">{customer.phone}</p>
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-muted-foreground text-xs mb-1">Company</p>
-            <p>{customer.company || "—"}</p>
+            <p className="break-words">{customer.company || "—"}</p>
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-muted-foreground text-xs mb-1">Status</p>
             <StatusBadge status={customer.status} />
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-muted-foreground text-xs mb-1">Last Contact</p>
-            <p>{formatDate(customer.lastContact)}</p>
+            <p className="break-words">{formatDate(customer.lastContact)}</p>
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-muted-foreground text-xs mb-1">Customer Since</p>
-            <p>{formatDate(customer.createdAt)}</p>
+            <p className="break-words">{formatDate(customer.createdAt)}</p>
           </div>
         </div>
 

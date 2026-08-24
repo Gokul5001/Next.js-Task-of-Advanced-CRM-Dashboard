@@ -32,7 +32,7 @@ import { CustomerDetailsDialog } from "./customer-details-dialog";
 import { EditCustomerDialog } from "./edit-customer-dialog";
 import { DeleteConfirmDialog } from "./delete-confirm-dialog";
 import { BulkDeleteDialog } from "./bulk-delete-dialog";
-import { ArrowUp, ArrowDown, ArrowUpDown, SlidersHorizontal, Move, Download } from "lucide-react";
+import { ArrowUp, ArrowDown, ArrowUpDown, SlidersHorizontal, Move, Download, X } from "lucide-react";
 import { applyFilters, countActiveFilters, createEmptyFilters } from "@/lib/filter-utils";
 import { customersToCSV, downloadCSV } from "@/lib/csv-export";
 import { useToast } from "@/components/toast-provider";
@@ -287,15 +287,30 @@ export function CustomerTable() {
     <div className="space-y-5">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-2 flex-1">
-          <Input
-            placeholder="Search by name, email, or company..."
-            value={searchInput}
-            onChange={(e) => {
-              setSearchInput(e.target.value);
-              setPage(1); // reset to first page on new search
-            }}
-            className="max-w-sm"
-          />
+          <div className="relative max-w-sm w-full">
+            <Input
+              placeholder="Search by name, email, or company..."
+              value={searchInput}
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+                setPage(1); // reset to first page on new search
+              }}
+              className="pr-8"
+            />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchInput("");
+                  setPage(1);
+                }}
+                aria-label="Clear search"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
           <Button variant="outline" size="sm" onClick={() => setFiltersOpen(true)} className="gap-1.5">
             <SlidersHorizontal className="h-3.5 w-3.5" />
             Filters
@@ -383,7 +398,8 @@ export function CustomerTable() {
                 ) : (
                   <TableHead className="w-8">
                     <Checkbox
-checked={allOnPageSelected || someOnPageSelected}                      onCheckedChange={toggleSelectAllOnPage}
+                      checked={allOnPageSelected ? true : someOnPageSelected ? "indeterminate" : false}
+                      onCheckedChange={toggleSelectAllOnPage}
                       aria-label="Select all on page"
                     />
                   </TableHead>
@@ -407,8 +423,24 @@ checked={allOnPageSelected || someOnPageSelected}                      onChecked
                   </button>
                 </TableHead>
                 <TableHead>Phone</TableHead>
-                <TableHead>Company</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>
+                  <button
+                    className="flex items-center font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+                    onClick={() => toggleSort("company")}
+                    disabled={manualReorderMode}
+                  >
+                    Company <SortIcon field="company" />
+                  </button>
+                </TableHead>
+                <TableHead>
+                  <button
+                    className="flex items-center font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+                    onClick={() => toggleSort("status")}
+                    disabled={manualReorderMode}
+                  >
+                    Status <SortIcon field="status" />
+                  </button>
+                </TableHead>
                 <TableHead>
                   <button
                     className="flex items-center font-medium disabled:opacity-40 disabled:cursor-not-allowed"

@@ -32,7 +32,7 @@ export interface SavedFilter {
   filters: CustomerFilters;
 }
 
-export type SortField = "name" | "email" | "lastContact";
+export type SortField = "name" | "email" | "company" | "status" | "lastContact";
 export type SortDirection = "asc" | "desc";
 
 export interface SortState {
