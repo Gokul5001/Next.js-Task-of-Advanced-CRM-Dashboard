@@ -569,6 +569,7 @@ export function CustomerTable() {
         onEdit={() => {
           setDetailsOpen(false);
           setEditOpen(true);
+
         }}
         onDelete={() => {
           setDetailsOpen(false);

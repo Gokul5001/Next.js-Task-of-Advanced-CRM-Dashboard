@@ -2,6 +2,7 @@ import { Users } from "lucide-react";
 import { CustomerTable } from "@/components/customers/customer-table";
 import { ThemeToggle } from "@/components/theme-toggle";
 
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
